@@ -26,7 +26,7 @@ let value;
 
 // m btns
 const memoryElHidden = document.querySelectorAll('.m-hidden');
-const memoryPlus = document.getElementById('m-plus');
+const memoryPlus = document.querySelectorAll('.m-plus');
 const mClear = document.querySelector('.m-clear');
 
 // flags
@@ -78,22 +78,24 @@ squareVal.addEventListener('click', ()=>{
 
 // backspc btn
 backBtn.addEventListener('click', ()=>{
-    if (result.textContent !== "0") {
-        let res = result.textContent;
-        if (res.length !== 1) {
-            // get last char of the string
-            let lastChar = res.charAt(res.length - 1);
-            
-            // sets the decimal flag to false so decimal can be added again
-            if (lastChar == ".") {
-                decimalFlag = false;
+    if (equalFlag == false) {
+        if (result.textContent !== "0") {
+            let res = result.textContent;
+            if (res.length !== 1) {
+                // get last char of the string
+                let lastChar = res.charAt(res.length - 1);
+                
+                // sets the decimal flag to false so decimal can be added again
+                if (lastChar == ".") {
+                    decimalFlag = false;
+                }
+    
+                // replace the last char with an empty string
+                let inc = res.slice(0, -1);
+                result.textContent = inc;
+            } else {
+                result.textContent = "0";
             }
-
-            // replace the last char with an empty string
-            let inc = res.slice(0, -1);
-            result.textContent = inc;
-        } else {
-            result.textContent = "0";
         }
     }
 })
@@ -206,36 +208,42 @@ equals.addEventListener('click', ()=> {
 })
 
 // memory btns
-memoryPlus.addEventListener("click", () => {
-    const memCon = memoryPlus.parentNode;
-    const memBtns = memCon.querySelectorAll(".m-btn");
-    memBtns.forEach((mem) => {
-        if (mem.classList.contains('m-hide')) {
-            mem.classList.replace('m-hide', 'm-show');
+memoryPlus.forEach((mBtn) => {
+    mBtn.addEventListener("click", () => {
+        const memCon = mBtn.parentNode;
+        const memBtns = memCon.querySelectorAll(".m-btn");
+        memBtns.forEach((mem) => {
+            if (mem.classList.contains('m-hide')) {
+                mem.classList.replace('m-hide', 'm-show');
+            }
+        })
+    })
+
+    mClear.addEventListener('click', ()=>{
+        if (mClear.classList.contains('m-show')) {
+            const memCon = mBtn.parentNode;
+            const memBtns = memCon.querySelectorAll(".m-btn");
+            memBtns.forEach((mem) => {
+                if (mem.classList.contains('m-show')) {
+                    mem.classList.replace('m-show', 'm-hide');
+                }
+            })
         }
     })
 })
 
-mClear.addEventListener('click', ()=>{
-    if (mClear.classList.contains('m-show')) {
-        const memCon = memoryPlus.parentNode;
-        const memBtns = memCon.querySelectorAll(".m-btn");
-        memBtns.forEach((mem) => {
-            if (mem.classList.contains('m-show')) {
-                mem.classList.replace('m-show', 'm-hide');
-            }
-        })
-    }
-})
 
 function calc(fn) {
     return new Function('return ' + fn)();
 }
-
 
 // display only first ten digits on result con
 function resultSlice() {
     if (result.textContent.length > 10) {
         result.textContent = result.textContent.slice(0, 10);
     }
+//         result.style.fontSize = "35px";
+//     } else if (result.textContent.length > 14) {
+//         result.style.fontSize = "30px";
+//     }
 }
